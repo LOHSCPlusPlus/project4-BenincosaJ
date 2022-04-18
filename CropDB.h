@@ -18,8 +18,9 @@ class CropDB {
         void readFile(const char fileName[]);
         void print(bool searchRange, double min, double max);
 
-        enum {MAX_CROPS = 500};
+        //enum {MAX_CROPS = 500};
         //CropInfo crops[MAX_CROPS];
         CropInfo *crops;
+        void expand();
         int numCrops;
 };
