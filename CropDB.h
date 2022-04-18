@@ -22,5 +22,6 @@ class CropDB {
         //CropInfo crops[MAX_CROPS];
         CropInfo *crops;
         void expand();
+        void shrink();
         int numCrops;
 };

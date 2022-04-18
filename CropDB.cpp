@@ -18,7 +18,7 @@ CropDB::CropDB(){
 CropDB::~CropDB(){
   delete [] crops;
 }
-
+//expand function, adds an extra space in the array
 void CropDB::expand() {
    CropInfo *temp = new CropInfo[numCrops + 1];
    for (int i = 0; i < numCrops; i++) {
@@ -26,6 +26,19 @@ void CropDB::expand() {
    }
    delete [] crops;
    crops = temp;
+}
+
+//shrink function, removes a space from the array
+void CropDB::shrink() {
+  CropInfo *temp = nullptr;
+  if (numCrops > 1) {
+    temp = new CropInfo[numCrops - 1];
+    for (int i = 0; i < numCrops - 1; i++) {
+      temp[i] = crops[i];
+    }
+  }
+  delete [] crops;
+  crops = temp;
 }
 
 
@@ -87,6 +100,7 @@ void CropDB::remove(){
         for (int index = delIndex; index < numCrops - 1; index++) {
             crops[index] = crops[index + 1];
         }
+        shrink();
         numCrops--;
     }
     else {
