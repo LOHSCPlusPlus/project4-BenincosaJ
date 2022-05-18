@@ -1,3 +1,6 @@
+//You are on step 24e right now!!!
+
+
 #include "CropInfo.h"
 #include "ReadUtils.h"
 #include <iostream>
@@ -6,13 +9,43 @@ using namespace std;
 Clear all the values to zero.
 */
 CropInfo::CropInfo(){
+    name = nullptr;
+    yieldsByYear = new double[NUM_YEARS];
     cropCode = 0;
-    for (int index = 0; index < MAX_NAME_LEN; index++) {
-        name[index] = '\0';
-    }
+    //for (int index = 0; index < MAX_NAME_LEN; index++) {
+       // name[index] = '\0';
+    //}
     for (int index = 0; index < NUM_YEARS; index++) {
         yieldsByYear[index] = 0;
     }
+}
+
+CropInfo::~CropInfo(){
+  delete [] name;
+  delete [] yieldsByYear;
+}
+
+void CropInfo::operator=(const CropInfo &other ){
+   //strcpy(name, other.name);
+    delete [] name;
+    name = createCharPtr(other.name);
+    for (int index = 0; index < NUM_YEARS; index++) {
+        yieldsByYear[index] = other.yieldsByYear[index];
+    }
+    cropCode = other.cropCode;
+  
+}
+
+CropInfo::CropInfo(const CropInfo &other){
+    name = nullptr;
+    yieldsByYear = new double[NUM_YEARS];
+    name = createCharPtr(other.name);
+    for (int index = 0; index < NUM_YEARS; index++) {
+        yieldsByYear[index] = other.yieldsByYear[index];
+    }
+    cropCode = other.cropCode;
+    
+  
 }
 /**
 Loads the information from the file specified
@@ -20,7 +53,7 @@ Loads the information from the file specified
 void CropInfo::readFromFile(istream &file) {
     file >> cropCode;
     file.ignore(100, ';');
-    file.getline(name, MAX_NAME_LEN, ';');
+    name = readCString(file, ';');
     for (int index = 0; index < NUM_YEARS; index++) {
         file >> yieldsByYear[index];
         // Either ignore the ; or \n after each year.
@@ -29,6 +62,12 @@ void CropInfo::readFromFile(istream &file) {
         }
     }
 }
+
+//delete [] ptr1;
+   // cout << "Enter a sentence: ";
+   // ptr1 = readCString(cin, '\n');
+   // cout << " ptr1 contents = " << ptr1 << endl;
+
 /**
 Very similar to readFromFile, but we are prompting the user
 for the values.
@@ -37,7 +76,7 @@ void CropInfo::readFromUser(){
     cropCode = readDouble("Enter the crop code: ");
     cin.ignore(100, '\n');
     cout << "Enter the crop name: ";
-    cin.getline(name, MAX_NAME_LEN);
+    name = readCString(cin, '\n');
     for (int index = 0; index < NUM_YEARS; index++) {
         // Create the prompt here, no prompt sent to readDouble.
         cout << "Enter the yield for the year " <<  START_YEAR + index << ": ";
